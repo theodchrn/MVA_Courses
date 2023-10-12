@@ -1,7 +1,8 @@
-\documentclass[12pt,a4paper]{report}
+\documentclass[12pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[french]{babel}
 \usepackage[T1]{fontenc}
+\usepackage{tikz}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
@@ -10,7 +11,99 @@
 \usepackage[left=2.5cm,right=2.5cm,top=2cm,bottom=2cm]{geometry}
 \author{Théotime de Charrin}
 \title{Convex Optimization - HW1}
+
 \begin{document}
-\section{Exercise 1}
-\paragraph{1)} For a given $\i$, a $x_i$ is the intersection of two halfspaces $\left{ x \in \mathBB{R}^n | x_i \leq \beta_i}$ and  $\left{ x \in \mathBB{R}^n | x_i \geq \alpha_i\right}$ 
+\maketitle
+\section{\textbf{Exercise 1} : Which of the following sets are convex?}
+\paragraph{1)} The rectangle set defined as 
+$ \left\lbrace x \in \mathbb{R}^n | ~\forall i \in  \llbracket 1, n \rrbracket , \alpha_i \leq x_i \leq \beta_i \right\rbrace$ \\
+	For a given $i$, a $\left\lbrace x_i\right\rbrace$ is the intersection of two halfspaces $ \left\lbrace x \in \mathbb{R}^n 
+| x_i \leq \beta_i \right\rbrace $ and  $\left\lbrace x \in \mathbb{R}^n |  x_i \geq \alpha_i \right\rbrace$ \\
+As $i$ is finite, a rectangle is a finite intersection of halfspaces so it is a convex set.
+\paragraph{2)} The hyperbolic set defined as $\left\lbrace H :  x \in R^2_+ | x_1x_2 \geq 1\right\rbrace$ .\\
+We take $ x = \begin{pmatrix}
+	x_1 \\ x_2  
+\end{pmatrix},y = \begin{pmatrix}
+	y_1\\y_2 
+\end{pmatrix}\in R^2 $ such that $ x,y \in H $ and $ \theta \in [0;1] $
+Hence, we have $ x_1 x_2 \geq 1 $ and the same for y.\\
+Let's look at the convex combination of x and y : 
+\begin{align*}
+	\theta x + (1-\theta) y & = \begin{pmatrix}
+		\theta x_1 + (1-\theta) y_1 \\
+		\theta x_2 + (1-\theta) y_2
+	\end{pmatrix} \\
+				& = \begin{pmatrix}
+					z_1 \\ z_2 
+				\end{pmatrix}
+\end{align*}
+\[
+	z_1 z_2 = \theta^2 \overbrace{x_1x_2}^{\geq 1}+ (1-\theta)^2 \overbrace{y_1y_2}^{\geq 1} + \theta (1-\theta) (x_1y_2+y_1x_2)
+\]\newline
+Let's have a look at $ x_1y_2 + y_1x_2 $ : we have $ x_1 x_2 \geq 1 \Leftrightarrow x_1 y_2 \geq \dfrac{y_2}{x_2} $. In the same manner, $ y_1 x_2 \geq \dfrac{x_2}{y_2} $.\\
+We now have : \begin{align*}
+	& x_1_y_2 + y_1x_2 && \geq \dfrac{y_2}{x_2} + \dfrac{x_2}{y_2} \\
+	& && \geq \dfrac{y_2}{x_2} + \dfrac{1}{\frac{y_2}{x_2}}\\
+	\Leftrightarrow & x_1y_2 + y_1x_2 -2 &&\geq  \dfrac{y_2}{x_2} + \dfrac{1}{\frac{y_2}{x_2}}-2\\
+			& && \geq \sqrt{\dfrac{y_2}{x_2}}^2+\dfrac{1}{\sqrt{\frac{y_2}{x_2}}}^2
+		-2 \dfrac{\sqrt{\frac{y_2}{x_2}}}{\sqrt{\frac{y_2}{x_2}}}\\
+			& && \geq \left( \sqrt{\dfrac{y_2}{x_2}}-\dfrac{1}{\sqrt{\dfrac{y_2}{x_2}}}\right)^2\geq 0 ~\forall \left\lbrace (x_1,x_2), (y_1,y_2)\right\rbrace
+\end{align*}
+We can conclude that $ x_1y_2 + y_1x_2 \geq 2 $\\
+$ \theta (1-\theta)\geq 0 ~\forall \theta \in [0,1] $ so $ \theta (1-\theta) (x_1y_2+y_1x_2) \geq 2\theta (1-\theta) $ and : \begin{align*}
+	z_1z_2 &\geq \theta ^2 + (1-\theta)^2 + 2\theta(1-\theta) \\
+	       &\geq (\theta + 1 - \theta)^2 \geq 1
+\end{align*}
+We have shown that $ z_1z_2 \geq 1 $, i.e. $ \theta x + (1-\theta)y \in H $\\
+A convex combination of two elements in H is also in H, so the hyperbolic set is convex as well.
+\paragraph{3)} The set of points closer to a given point than a given set, \textit{i.e.} $$
+	A = \left\lbrace x ~| ~{\| x - x_0 \|}_2 \leq {\|x-y\|}_2 ~\forall y \in S \right\rbrace \\ \text{where} S \subseteq \mathbb{R}^n.
+
+$$
+Let  $ y \in S ~\text{and} ~x~\in A$. Then we must have :
+\begin{align*}
+&	{\| x- x_0 \|}_2 &&\leq {\| x-y\|}_2\\
+			 &	(x-x_0)^T (x-x_0) &&\leq (x-y)^T(x-y) 			 \\
+			 & (x^T - {x_0}^T )(x-x_0) &&\leq (x^T -y^T)(x-y)\\
+			 & x^T x - x^T x_0 - {x_0}^Tx + {x_0}^T x_0 && \leq  x^Tx - x^Ty - y^Tx + y^Ty\\
+			 & -2x^Tx_0 + {\|x_0\|}_2^2 &&\leq -2x^Ty + {\|y\|}_2^2\\
+			 & 2x^T(y-x_0) &&\leq {\|x_0\|}_2^2 + {\|y\|}_2^2 \\
+			 & (y-{x_0})^Tx &&\leq \dfrac{{\|x_0\|}_2^2 + {\|y\|}_2^2}{2}
+\end{align*}
+This is the equation of an halfspace ( $ a^T x \leq b $), which is a convex set. 
+S is the intersection over $ y \in S $ of these halfspaces, hence it's also a convex set.
+\paragraph{4)} The set of points closer to one set than another, \textit{i.e.} $$ A = \left\lbrace x ~| ~\text{\textbf{dist}}(x,S) \leq \text{\textbf{dist}}(x,T)\right\rbrace , \\ 
+~\text{where} ~S,T \subseteq \mathbb{R}^n, ~\text{and} ~\text{\textbf{dist}}(x,S)=~\text{inf}\left\lbrace~{\|x-z\|}_2 ~| ~z \in S\right\rbrace$$
+A visual example should better explain why this is not always a convex set :
+\begin{center}
+\begin{tikzpicture}
+	 \draw[step=1cm,gray,very thin] (-2,-2) grid (7,7);
+ \filldraw[fill=blue!40!white, draw=black] (-2,1) rectangle (2,5);
+ \filldraw[fill=red!40!white, draw=black] (5,2) rectangle (7,4);
+ \node[draw] at (0,3) {set S};
+ \node[draw] at (6,3) {set T};
+ \draw[fill=black] (4,7) circle (0.05) node[below left] {$ x_1 $};
+ \draw[fill=black] (4,-1) circle (0.05) node[above right] {$ x_2 $};
+ \draw[fill=black] (4,3) circle (0.05) node[above right] {$ x_3 $};
+	 %\draw[blue,thick] (5,5) rectangle (6,6);
+\end{tikzpicture}
+\end{center}
+Here, we see that $ x_1 ~\text{and}~ x_2 $ are closer to the set S rather than the set T. Therefore, they would be part of the set A. 
+However, $ x_3 $, a convex combination of $ x_1,~x_2 $, \textit{i.e.} on the same segment, is closer to the set T than the set S.\\
+Therefore, A is not a convex set.
+\paragraph{5)} The set $$A= \left\lbrace x~|~x+S_2 ~\subseteq S_1\right\rbrace $$ where $ S_1,~S_2~\in \mathbb{R}^n $,$ ~S_1 $ convex.\\
+\begin{equation*}
+	x+S_2 \subseteq S_1 \Leftrightarrow \forall y~\in S_2,~x+y\in S_1
+\end{equation*}
+\\
+Let's look at the convex combination of $ u,~v \in A,~\theta \in [0,1] $, and see if it's still in A :\\
+\begin{align*}
+	\theta u + (1-\theta)v  + y = \theta(u+y) + (1-\theta)(v+y) \in S_1
+\end{align*}
+By definition, $ u+y,~v+y \in S_1 $ because $ u,~v \in A~\text{and}~y \in S_2 $. \\
+As $ S_1 $ is convex, any convex combination of $ z \in S_1 $ is also in $ S_1 $. 
+We conclude that A is a convex set.
+\section{\textbf{Exercise 2 : }For each of the following functions determine whether it is convex or concave or not.}
+\paragraph{1)} $ f(x_1,x_2)=x_1x_2 $ on $ \mathbb{R}^2_{++} $
+\\ 
 \end{document}
