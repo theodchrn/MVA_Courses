@@ -1,4 +1,31 @@
 \documentclass[12pt,a4paper]{article}
+\usepackage{datetime}
+\newdate{date}{16}{10}{2023}
+\date{\displaydate{date}}
+\usepackage{pict2e,picture}
+\makeatletter
+\newcommand{\pnrelbar}{%
+  \linethickness{\dimen2}%
+  \sbox\z@{$\m@th\prec$}%
+  \dimen@=1.1\ht\z@
+  \begin{picture}(\dimen@,.4ex)
+  \roundcap
+  \put(0,.2ex){\line(1,0){\dimen@}}
+  \put(\dimexpr 0.5\dimen@-.2ex\relax,0){\line(1,1){.4ex}}
+  \end{picture}%
+}
+\newcommand{\precneq}{\mathrel{\vcenter{\hbox{\text{\prec@neq}}}}}
+\newcommand{\prec@neq}{%
+  \dimen2=\f@size\dimexpr.04pt\relax
+  \oalign{%
+    \noalign{\kern\dimexpr.2ex-.5\dimen2\relax}
+    $\m@th\prec$\cr
+    \noalign{\kern-.5\dimen2}
+    \hidewidth\pnrelbar\hidewidth\cr
+  }%
+}
+\makeatother
+\usepackage{mathtools} % mathtools loads the amsmath package automatically
 \usepackage[utf8]{inputenc}
 \usepackage[french]{babel}
 \usepackage[T1]{fontenc}
@@ -14,6 +41,7 @@
 
 \begin{document}
 \maketitle
+\date
 \section{\textbf{Exercise 1} : Which of the following sets are convex?}
 \paragraph{1)} The rectangle set defined as 
 $ \left\lbrace x \in \mathbb{R}^n | ~\forall i \in  \llbracket 1, n \rrbracket , \alpha_i \leq x_i \leq \beta_i \right\rbrace$ \\
@@ -42,14 +70,14 @@ Let's look at the convex combination of x and y :
 \]\newline
 Let's have a look at $ x_1y_2 + y_1x_2 $ : we have $ x_1 x_2 \geq 1 \Leftrightarrow x_1 y_2 \geq \dfrac{y_2}{x_2} $. In the same manner, $ y_1 x_2 \geq \dfrac{x_2}{y_2} $.\\
 We now have : \begin{align*}
-	& x_1_y_2 + y_1x_2 && \geq \dfrac{y_2}{x_2} + \dfrac{x_2}{y_2} \\
+	& x_1 y_2 + y_1 x_2 && \geq \dfrac{y_2}{x_2} + \dfrac{x_2}{y_2} \\
 	& && \geq \dfrac{y_2}{x_2} + \dfrac{1}{\frac{y_2}{x_2}}\\
 	\Leftrightarrow & x_1y_2 + y_1x_2 -2 &&\geq  \dfrac{y_2}{x_2} + \dfrac{1}{\frac{y_2}{x_2}}-2\\
 			& && \geq \sqrt{\dfrac{y_2}{x_2}}^2+\dfrac{1}{\sqrt{\frac{y_2}{x_2}}}^2
 		-2 \dfrac{\sqrt{\frac{y_2}{x_2}}}{\sqrt{\frac{y_2}{x_2}}}\\
 			& && \geq \left( \sqrt{\dfrac{y_2}{x_2}}-\dfrac{1}{\sqrt{\dfrac{y_2}{x_2}}}\right)^2\geq 0 ~\forall \left\lbrace (x_1,x_2), (y_1,y_2)\right\rbrace
 \end{align*}
-We can conclude that $ x_1y_2 + y_1x_2 \geq 2 $\\
+We can conclude that $ x_1 y_2 + y_1 x_2 \geq 2 $\\
 $ \theta (1-\theta)\geq 0 ~\forall \theta \in [0,1] $ so $ \theta (1-\theta) (x_1y_2+y_1x_2) \geq 2\theta (1-\theta) $ and : \begin{align*}
 	z_1z_2 &\geq \theta ^2 + (1-\theta)^2 + 2\theta(1-\theta) \\
 	       &\geq (\theta + 1 - \theta)^2 \geq 1
@@ -57,8 +85,7 @@ $ \theta (1-\theta)\geq 0 ~\forall \theta \in [0,1] $ so $ \theta (1-\theta) (x_
 We have shown that $ z_1z_2 \geq 1 $, i.e. $ \theta x + (1-\theta)y \in H $\\
 A convex combination of two elements in H is also in H, so the hyperbolic set is convex as well.
 \paragraph{3)} The set of points closer to a given point than a given set, \textit{i.e.} $$
-	A = \left\lbrace x ~| ~{\| x - x_0 \|}_2 \leq {\|x-y\|}_2 ~\forall y \in S \right\rbrace \\ \text{where} S \subseteq \mathbb{R}^n.
-
+	A = \left\lbrace x ~| ~{\| x - x_0 \|}_2 \leq {\|x-y\|}_2 ~\forall y \in S \right\rbrace \text{where} S \subseteq \mathbb{R}^n.
 $$
 Let  $ y \in S ~\text{and} ~x~\in A$. Then we must have :
 \begin{align*}
@@ -105,5 +132,235 @@ As $ S_1 $ is convex, any convex combination of $ z \in S_1 $ is also in $ S_1 $
 We conclude that A is a convex set.
 \section{\textbf{Exercise 2 : }For each of the following functions determine whether it is convex or concave or not.}
 \paragraph{1)} $ f(x_1,x_2)=x_1x_2 $ on $ \mathbb{R}^2_{++} $
-\\ 
+\begin{itemize}
+	\item $ \text{dom} ~f=\mathbb{R}^2_{++} $ which is convex.
+	\item f is twice differentiable, let's look at the second-order conditions :\\
+
+ \end{itemize}
+ \begin{center}
+$$	\begin{cases}
+			\dfrac{\partial f}{\partial x_1} &=  x_2 \\
+			\dfrac{\partial f}{\partial x_2} &=  x_1 
+		\end{cases}
+		\quad 
+		\Rightarrow
+		\quad
+		\left\lbrace
+		\begin{matrix}
+			\dfrac{\partial^2 f}{\partial^2 x_1} =  0 \quad 
+			&\dfrac{\partial^2 f}{\partial^2 x_1x_2} =  1 \\
+			\dfrac{\partial^2 f}{\partial^2 x_2} =  0 \quad  
+							     &\dfrac{\partial^2 f}{\partial^2 x_2x_1} =  1 
+		\end{matrix} \right.	$$
+	\end{center}
+	Hence, we have the following hessian : \def\arraystretch{2} $ \Delta^2 f(x_1,x_2)=	\begin{pmatrix}
+		0 & 1 \\
+		1 & 0	 
+        \end{pmatrix} $\\
+With -1 and 1 as eigen values. $ \Delta^2 f \notin S_n^{+} $, so f is not convex. In the same manner, $\Delta^2 f \npreceq 0$
+\\ We conclude that F is neither convex nor concave\\
+\paragraph{2)} $ f(x_1,x_2)=\frac{1}{x_1x_2} ~\text{on}~ \mathbb{R}_{++}^2$
+
+\begin{itemize}
+	\item $ \text{dom} ~f=\mathbb{R}^2_{++} $ which is convex.
+	\item f is twice differentiable, let's look at the second-order conditions :\\
+ \end{itemize}
+ \begin{center} 
+$$	\begin{cases}
+	\dfrac{\partial f}{\partial x_1} &= -\dfrac{1}{x_1^2x_2} \\
+	\dfrac{\partial f}{\partial x_2} &= -\dfrac{1}{x_2^2x_1}
+		\end{cases}
+		\quad 
+		\Rightarrow
+		\quad
+		\left\lbrace
+		\begin{matrix}
+			\dfrac{\partial^2 f}{\partial^2 x_1} =  \dfrac{2}{x_1^3x_2} \quad 
+			&\dfrac{\partial^2 f}{\partial^2 x_1x_2} =  \dfrac{1}{x_1^2x_2^2} \\
+			\dfrac{\partial^2 f}{\partial^2 x_2} =  \dfrac{2}{x_2^3x_1} \quad 
+			&\dfrac{\partial^2 f}{\partial^2 x_2x_1} =  \dfrac{1}{x_1^2x_2^2}
+		\end{matrix} \right.	$$
+	\end{center}
+	Hence, we have the following hessian : \def\arraystretch{2} $ \Delta^2 f(x_1,x_2)=	\begin{pmatrix}
+		\dfrac{2}{x_1^3x_2} & \dfrac{1}{x_1^2x_2^2} \\
+		\dfrac{1}{x_1^2x_2^2} & \dfrac{2}{x_2^3x_1}
+        \end{pmatrix} $\\
+        
+        $
+	\begin{cases}
+		\text{\textbf{det}}(\Delta^2f)= \dfrac{4}{x_1^4x_2^4}-\dfrac{1}{x_1^4x_2^4} > 0\\
+		\text{Tr}(\Delta^2f)=\dfrac{2x_2^2+2x_1^2}{x_1^3x_2^3}>0
+	\end{cases}
+$
+		$\quad \Rightarrow \quad \lambda_1\lambda_2>0,~\lambda_1+\lambda_2>0~: $All diagonal values are positive,  the determinant is positive so all eigenvalues are positive, hence $~\Delta^2f$ is a positive definite matrix, $~\Delta^2f \succ 0$.
+		We can say that f is a convex function on $ \mathbb{R}^2_{++}. $	
+		\paragraph{3)} $ f=\frac{x_1}{x_2} ~\text{on} ~\mathbb{R}^2_{++} $
+
+\begin{itemize}
+	\item $ \text{dom} ~f=\mathbb{R}^2_{++} $ which is convex.
+	\item f is twice differentiable, let's look at the second-order conditions :\\
+ \end{itemize}
+ \begin{center} 
+$$	\begin{cases}
+	\dfrac{\partial f}{\partial x_1} &= \dfrac{1}{x_2} \\
+	\dfrac{\partial f}{\partial x_2} &= -\dfrac{x_1}{x_2^2}
+		\end{cases}
+		\quad 
+		\Rightarrow
+		\quad
+		\left\lbrace
+		\begin{matrix}
+			\dfrac{\partial^2 f}{\partial^2 x_1} = 0 
+			&\dfrac{\partial^2 f}{\partial^2 x_1x_2} =  -\dfrac{1}{x_2^2} \\
+			\dfrac{\partial^2 f}{\partial^2 x_2} =  -\dfrac{2x_1}{x_2^3} \quad 
+			&\dfrac{\partial^2 f}{\partial^2 x_2x_1} =  \dfrac{1}{x_2^2}
+		\end{matrix} \right.	$$
+	\end{center}
+	Hence, we have the following hessian : \def\arraystretch{2}  $ \Delta^2 f(x_1,x_2)=	\begin{pmatrix}
+		0	
+			&-\dfrac{1}{x_2^2} \\ \bigskip
+			 -\dfrac{1}{x_2^2}
+			& \dfrac{2x_1}{x_2^3} 
+        \end{pmatrix} $\\
+	$\begin{cases} \text{\textbf{det}}~(\Delta^2 f )= \overbrace{-\dfrac{2x_1}{x_2^3}}^{<0, ~\text{dom} ~f =~ 
+	\mathbb{R}^2_{++}}-{\dfrac{1}{x_2^2}}^2 < 0 \\
+	\text{Tr}~(\Delta^2f)~=\dfrac{2x_1}{x_2^3}>0 
+\end{cases} $
+		$\quad \Rightarrow \quad \lambda_1\lambda_2<0,~\lambda_1+\lambda_2>0~: $All diagonal values are positive,  the determinant is negative so one eigenvalue is positive an the other negative, hence $~\Delta^2f \npreceq 0$ , $~\Delta^2f \nsucceq 0$.
+\\ We can conclude that f is neither convex nor concave.
+\paragraph{4)} $ f(x_1,x_2)=x_1^{\alpha} x_2^{1-\alpha} $, where $ 0 \leq \alpha \leq 1,~\text{on}~ \mathbb{R}^2_{++} $
+\begin{itemize}
+	\item $ \text{dom} ~f=\mathbb{R}^2_{++} $ which is convex.
+	\item f is twice differentiable, let's look at the second-order conditions :\\
+ \end{itemize}
+ \begin{center} 
+$$	\begin{cases}
+	\dfrac{\partial f}{\partial x_1} &=\alpha x_1^{\alpha -1}x_2^{1-\alpha} \\
+	\dfrac{\partial f}{\partial x_2} &=(1-\alpha) x_1^{\alpha}x_2^{-\alpha} 
+		\end{cases}
+		\quad 
+		\Rightarrow
+		\quad
+		\left\lbrace
+		\begin{matrix}
+			\dfrac{\partial^2 f}{\partial^2 x_1} = \alpha (\alpha -1)x_1^{\alpha-2}x_2^{1-\alpha} 
+			&\dfrac{\partial^2 f}{\partial^2 x_1x_2} =\alpha (1-\alpha)x_1^{\alpha -1}x_2^{-\alpha}\\ 
+			\dfrac{\partial^2 f}{\partial^2 x_2} = \alpha(\alpha-1)x_1^{\alpha}x_2^{-\alpha - 1} 
+			&\dfrac{\partial^2 f}{\partial^2 x_2x_1} = \alpha (1-\alpha)x_1^{\alpha -1}x_2^{-\alpha}
+		\end{matrix} \right.	$$
+	\end{center}
+	Hence, we have the following hessian : \def\arraystretch{2}  $ \Delta^2 f(x_1,x_2)=	\begin{pmatrix}
+			 \alpha (\alpha -1)x_1^{\alpha-2}x_2^{1-\alpha} 
+			&\alpha (1-\alpha)x_1^{\alpha -1}x_2^{-\alpha}\\ 
+			\alpha (1-\alpha)x_1^{\alpha -1}x_2^{-\alpha}
+			&\alpha(\alpha-1)x_1^{\alpha}x_2^{-\alpha - 1} \\
+        \end{pmatrix} $\\
+	$$\begin{cases} \text{\textbf{det}}~(\Delta^2 f )&= 
+			 \alpha (\alpha -1)x_1^{\alpha-2}x_2^{1-\alpha} \times 
+			\alpha(\alpha-1)x_1^{\alpha}x_2^{-\alpha - 1} -
+			\alpha (1-\alpha)x_1^{\alpha -1}x_2^{-\alpha}\times 
+			\alpha (1-\alpha)x_1^{\alpha -1}x_2^{-\alpha}\\
+			&=\alpha^2(\alpha-1)^2 \left[ x_1^{2\alpha -2}x_2^{-2\alpha}+x_1^{2\alpha -2}x_2^{-2\alpha}\right]\\
+			&=\alpha^2(\alpha-1)^2\left(\dfrac{x_1^{\alpha-1}}{x_2^{\alpha}}\right)^2\geq 0\\
+			\text{Tr}~(\Delta^2f)~&=\underbrace{\alpha(\alpha-1)}_{\leq 0}\left(x_1^{\alpha-2}x_2^{1-\alpha}+x_1^{\alpha}x_2^{-\alpha-1}\right)\leq 0
+\end{cases} $$\\
+		$\quad \Rightarrow \quad \lambda_1\lambda_2\geq0,~\lambda_1+\lambda_2\leq0~: $ All diagonal values are negative,
+		the determinant is positive so all eigenvalues are negatives, hence $~\Delta^2f \preceq 0$ .\\
+We can conclude that f is concave. 
+\section{Exercise 3 : Show that following functions are convex}
+\paragraph{1)} $ f(X)=\text{\textbf{Tr}}(X^{-1})~\text{on \textbf{dom}}~f=S^n_{++}. $
+\begin{itemize}
+	\item $ \text{dom} ~f=S^2_{++} $ which is convex.
+	\item f is twice differentiable, the second-order conditions might apply:\\
+ \end{itemize}
+ Let's look at the function $ g(t)=f(X+tV), ~\text{dom}X=\{t~|~X+tV \in \text{dom} f\}$.
+ \\Let's pose $ X \in S^n_{++} \text{and} V \in S_n $. If for all X and V in this domain g is convex, 
+ then f(X) must be convex as well.\\
+\begin{align*}
+	g(t) &= \text{Tr}((X+tV)^{-1})\\
+	\text{Let's look inside the Trace :}~ &= \text{Tr}(X(I+tX^{-1}V))^{-1})\\
+	\text{Let's make a Taylor expansion in t} : ~&= \text{Tr}(X^{-1}-tX^{-1}VX^{-1}+t^2 +t^2X^{-1}VX^{-1}VX^{-1} + \dots)
+\end{align*}
+To show that Tr($ X^{-1} $) is convex, we can look at the second derivative, when t=0:
+\begin{align*}
+	\left. \dfrac{\partial^2g}{\partial t^2} \right|_{t=0} = 2\text{Tr}(X^{-1}VX^{-1}VX^{-1})
+\end{align*}
+We can write this as $ PX^{-1}P^T $, with $ P=X^{-1}V $, and $ X^{-1} \in S^n_{++} $.
+Hence $ PX{-1}P^T $ is positive definite as well, so its trace must be positive.\\
+%	It comes that $\dfrac{\partial^2g}{\partial t^2} \geq 0$, \textit{i.e.} g is convex. f(X) must be convex as well.
+%	\paragraph{2)} $ f(X,y)=y^T X^{-1}y,~\text{dom}f=S^n_{++}\times \mathbb{R}^n $\\
+%	According to lecture slides (24/67, Functions and problems). We have \\ $ \dfrac{1}{2} y^TQ^{-1}y = ~\text{sup}(y^Tx - \dfrac{1}{2}x^TQx  $,
+%	with x another column vector in $ \mathbb{R}^n $.
+%	\\ 	It comes for our problem that : $ y^TX^{-1}y=~\text{sup}~ (2y^Tx-x^TXx)$
+%	\\ Let's look at the function g(X,y) which is inside the trace : \begin{align*}
+%		f(X,y)&=sup(g(X,y))\\
+%		g(X,y)&= 2y^Tx - x^TXx) 
+%	\end{align*}
+	g is a linear function of y and X, hence a convex function in (X,y)\\
+The supremum of a set of convex functions (every g(X,y), with any x in $ \mathbb{R}^n $ )is a convex function.\\
+We conclude that f(X,y) is a convex function.
+\paragraph{3)} $ f(X)= \sum_{i=1}^{n}\sigma_i(X)$ on \textbf{dom} f $ = S^n $, where $ \sigma_1(X),~\dots,\sigma_n(X) $ are the singular values of a matrix $ X \in \mathbb{R}^{n \times n } $ 
+\begin{itemize}
+	\item $ \text{dom} ~f=S^n $ which is convex.
+ \end{itemize}
+f is also known as the nuclear norm. A norm is always convex, so we just have to show that f is a norm.\\
+We want to verify the definition of norm : \\
+\begin{itemize}
+	\item Homogeneity : $\| \alpha A\| = |\alpha| \times \| A\ $
+for $ \alpha \in \mathbb{R} $\\
+\item Triangular Inequality: $ \| A+B\|\leq \|A\|+\|B\|$\\
+\item Positive definiteness: if $\|A\|=0$ ,
+ then A=0\\
+\item Positivity : $ \|A\|\geq 0 $\\
+\end{itemize}
+Regarding the positivity :\\
+\[
+	\|A\|=\sum_1^n \underbrace{\sigma_i(A)}_{\geq 0} \geq 0
+\]
+Regarding the positive definiteness: 
+$$
+\begin{cases}
+	\|A\|=0 \Rightarrow \sum_{i=1}^{n} \underbrace{\sigma_i}_{\geq 0} =0 \Rightarrow \sigma_i=0 \forall i \Rightarrow A=0.\\
+A=0 \Rightarrow \sigma_i=0 \forall i \Rightarrow \|A\|=0	
+\end{cases}
+$$
+Regarding the homogeneity, for t a scalar :
+\begin{align*}
+	\|tA\| = \sum_{i=1}^{n}\sigma_i (tA) &\underbrace{=}_{\text{As A is in}~S^n} 
+	\sqrt{\|t^2\|\lambda_i}^2\\
+	       &= |t| \sum_1^n \sqrt{{\lambda_i}^2}\\
+	       &= |t| \sum_1^n \sigma_i (A)\\
+	       &= |t| \|A\|
+\end{align*}
+Regarding the triangular inequality :\\
+Using the supremum, we will try to prove that \[ \sup_{\sigma_1(Q)\leq 1} \langle Q,A \rangle = 
+\sup_{\sigma_1(Q)\leq 1} \text{Tr}(Q^TA)=\sum_1^n \sigma_i(A)=\|A\| 
+\] Where $ \sigma_i(\cdot) $ is itself a norm, and $ \sigma_1 $ is the maximum singular value of Q. \\
+Let $ A = U\Sigma V^T = \sum \sigma_i u_i v_i^T $ be the singular value decomposition of A, and pose $ Q=UV^T = UIV^T$. 
+Hence, $ \sigma_1(Q)=1 $.\\
+\begin{align*}
+	\langle Q,A \rangle &= \langle UV^T, U\Sigma V^T \rangle \\
+			    &= \text{Tr}(VU^TU\Sigma V^T)\\
+			    &= \text{Tr}(V^TVU^TU\Sigma)
+			    &= \text{Tr}(\Sigma)
+\end{align*}
+Hence, it comes that \[
+	\sup_{\sigma_1(Q)\leq 1} \langle Q,A \rangle \geq \sum_1^n \sigma_i(A)
+\]
+Let's prove the other direction and we will have an equality. \begin{align*}
+	\sup_{\sigma_1(Q)\leq 1} \langle Q,A \rangle &= \sup_{\sigma_1(Q)\leq1} \text{Tr}(Q^TA) \\
+						    &= \sup_{\sigma_1(Q)\leq 1}\text{Tr}(Q^TU\Sigma V^T)\\
+						    &= \sup_{\sigma_1(Q)\leq 1}\text{Tr}(V^TQ^TU\Sigma)\\
+						    &= \sup_{\sigma_1(Q)\leq 1}\langle U^TQV,\Sigma \rangle \\
+						    &= \sup_{\sigma_1\leq 1}\sum_1^n \sigma_i(U^TQV)\\
+						    &= \sup_{\sigma_1 \leq 1} \sum_1^n \sigma_i u_i^T Q v_i \\
+						    & \leq \sup_{\sigma_1 \leq 1} \sum_1^n \sigma_i \sigma_{max}(Q)\\
+						    &= \sum_i^n \sigma_i (A) = \|A\|	 
+\end{align*}
+We have proven the equality $ \sup_{\sigma_1(Q)\leq 1} = \|A\| $. We can now show the triangular inequality : \begin{align*}
+	\|A+B\| &= \sup_{V, \sigma_1(V)\leq 1} \langle V, A+B \rangle \\
+	&\leq \sup_{V,~\sigma_1(V)\leq 1}\langle V, A \rangle + \langle V, B \rangle = \|A\|+\|B\|.
+\end{align*}
+ 
+Hence, we've shown that the nuclear norm is a norm, so f is convex.
 \end{document}
